@@ -13,8 +13,9 @@
       <% } else { %>
         <% employees.forEach(employee => { %>
           <li>
-            <strong>Name:</strong> <%= employee.name %>,
+            <strong>Username:</strong> <%= employee.username %>,
             <strong>Remaining Holidays:</strong> <%= employee.remainingHolidays %>
+            <strong>Role: </strong> <%= employee.role %>
           </li>
         <% }); %>
       <% } %>

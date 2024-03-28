@@ -5,7 +5,6 @@ import { MongoClient } from 'mongodb';
 export const collections: { 
     employee?: mongoDB.Collection,
     requests?: mongoDB.Collection,
-    users?: mongoDB.Collection,
 } = {}
 
 export async function connectToDatabase () {
@@ -17,7 +16,5 @@ export async function connectToDatabase () {
     collections.employee = employeeCollection;
     const requestCollection: mongoDB.Collection = db.collection(process.env.REQUESTS_COLLECTION_NAME!);
     collections.requests = requestCollection;
-    const userCollection: mongoDB.Collection = db.collection(process.env.USERS_COLLECTION_NAME!);
-    collections.users = userCollection;
     console.log(`Successfully connected to database: ${db.databaseName}`);
  }

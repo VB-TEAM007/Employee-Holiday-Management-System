@@ -13,11 +13,14 @@ export default class HolidayRequestService {
     return collections.requests?.find({ _id: id }) as unknown as HolidayRequest;
   }
   async getArrayPendingRequestsByEmployeeId(id: ObjectId): Promise<HolidayRequest[]> {
+    return await collections.requests?.find({employeeId: id, status: 'pending'}).toArray() as HolidayRequest[];
+  }
+  async getArrayRequestsByEmployeeId(id: ObjectId): Promise<HolidayRequest[]> {    
     return await collections.requests?.find({employeeId: id}).toArray() as HolidayRequest[];
   }
 
   async add(name: String, startDate: Date, endDate: Date): Promise<string | null> {
-    const employee = await collections.employee?.findOne({ name: name});
+    const employee = await collections.employee?.findOne({ username: name});
     const newRequest: HolidayRequest = {
       employeeId: employee!._id,
       startDate: startDate,
@@ -72,4 +75,5 @@ export default class HolidayRequestService {
     }
     return errorMessage;
   }
+  
 }

@@ -8,22 +8,31 @@
 <body>
   <div style="margin-bottom: 50px;">
   <h1 style="float: left;">Hi! Lets start!</h1>
-  <br>  
+  <br>
+  <% if(!access_token) { %>  
   <form action="/register" method="get" style="float: right;">
     <button type="submit" name="register">Register</button>
   </form>
   <form action="/login" method="get" style="float: right; margin-right: 15px;">
     <button type="submit" name="login">Login</button>
   </form>
+  <% } else { %>
+  <form action="/logout" method="get" style="float: right; margin-right: 15px;">
+    <button type="submit" name="login">LOGOUT</button>
+  </form>
+  <% } %>
   </div>
   <br style="float: none;">
-  <div>
-  <a href="/add-employee">Add employee</a><br>
-  <a href="/employees">Show all employees</a><br>
-  <a href="/add-request">Add holiday</a><br>
-  <a href="/requests">Show list of all holidays requests</a><br>
-  <a href="/public-holidays">See all public holidays of each country</a><br>
-  <br>
+  <% if (access_token) { %>
+  <div> 
+    <% if(employee.role === 'admin') { %>
+      <a href="/employees">Show all employees</a><br>
+    <% } %>
+    <a href="/add-request">Add holiday</a><br>
+    <a href="/requests">Show list of all holidays requests</a><br>
+    <a href="/public-holidays">See all public holidays of each country</a><br>
+    <br>
+    <% } %>
   </div>
   <form action="/set-database" method="post">
     <% if (db === 'postgres') { %>

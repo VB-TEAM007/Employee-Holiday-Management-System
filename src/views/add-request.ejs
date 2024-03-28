@@ -9,13 +9,8 @@
   <h1>Add holiday</h1>
   <form action="/add-request" method="POST">
     <form action="/add-request" method="POST">
-      <label for="employeeId">Employee ID:</label>
-      <select required name="name" size="1" style="width: 100px;">
-        <% employees.forEach(employee => { %>
-          <option> <%= employee.name %></option>
-        <% }); %>
-      </select><br>
-    <label for="startDate">Start Date:</label>
+      <label for="employeeId">Employee username: <%= employee.username %></label> <br>
+    <label for="startDate">Start Date: </label>
     <input type="date" id="startDate" name="startDate" required><br>
     <label for="endDate">End Date:</label>
     <input type="date" id="endDate" name="endDate" required>

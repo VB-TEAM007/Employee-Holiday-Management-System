@@ -4,6 +4,7 @@ import HolidayRequestService from '../services/holidayRequestService.js';
 import EmployeeService from '../services/employeeService.js';
 import { holidayRequestController } from '../controllers/holidayRequest.controller.js';
 import { employeeController } from '../controllers/employee.controller.js';
+import { isAuth } from '../utils/authUtils.js';
 
 const requestRouter = express.Router();
 const holidayRequestService = new HolidayRequestService();
@@ -12,47 +13,45 @@ const employeeService = new EmployeeService();
 requestRouter.get('/requests', async (req, res)  => {
   const selectedDatabase = process.env.SELECTED_DATABASE;
 
-  const employees = selectedDatabase === 'postgres' 
-    ? await employeeController.getAll(req, res) 
-    : await employeeService.getAll();
-
-const holidayRequests = selectedDatabase === 'postgres' 
-  ? await holidayRequestController.getAll() 
-  : await holidayRequestService.getAll();
+  const employee: any = selectedDatabase === 'postgres' 
+    ? await employeeController.getEmployeebyJwt(req.cookies.access_token.token) 
+    : await employeeService.getEmployeebyJwt(req.cookies.access_token.token);
+    
+  const holidayRequests = selectedDatabase === 'postgres' 
+    ? await holidayRequestController.getArrayRequestsByEmployeeId(employee.id) 
+    : await holidayRequestService.getArrayRequestsByEmployeeId(employee._id);
 
 const template = selectedDatabase === 'postgres' ? 'requestsForSQL' : 'requests';
 
-res.status(200).render(template, { holidayRequests, employees });
+res.status(200).render(template, { holidayRequests, employee, access_token: req.cookies.access_token });
 });
 
-requestRouter.get('/add-request', async(req, res)  => {
+requestRouter.get('/add-request', isAuth, async(req, res)  => {
   const selectedDatabase = process.env.SELECTED_DATABASE;
 
-  let employees = selectedDatabase === 'postgres' 
-    ? await employeeController.getAll(req, res) 
-    : await employeeService.getAll();
+  const employee = selectedDatabase === 'postgres' 
+    ? await employeeController.getEmployeebyJwt(req.cookies.access_token.token) 
+    : await employeeService.getEmployeebyJwt(req.cookies.access_token.token);
 
-  res.status(200).render('add-request', { employees, statusCode: res.statusCode} );
+  res.status(200).render('add-request', { employee, statusCode: res.statusCode} );
 });
 
 requestRouter.post('/add-request', async (req, res) => {
-  const name = req.body.name;
+  const selectedDatabase = process.env.SELECTED_DATABASE;
+  const employee: any = selectedDatabase === 'postgres' 
+    ? await employeeController.getEmployeebyJwt(req.cookies.access_token.token) 
+    : await employeeService.getEmployeebyJwt(req.cookies.access_token.token);
   const startDate = new Date(req.body.startDate);
   const endDate = new Date(req.body.endDate);
-  const selectedDatabase = process.env.SELECTED_DATABASE;
 
   const errorMessage = selectedDatabase === 'postgres' 
-  ? await holidayRequestController.add(name, startDate, endDate) 
-  : await holidayRequestService.add(name, startDate, endDate);
-
-  const employees = selectedDatabase === 'postgres' 
-  ? await holidayRequestController.getAll() 
-  : await employeeService.getAll();
+  ? await holidayRequestController.add(employee.username, startDate, endDate) 
+  : await holidayRequestService.add(employee.username, startDate, endDate);
 
   if (errorMessage === null) {
     res.redirect('/requests');
   } else {
-    res.status(400).render('add-request', { employees, errorMessage, statusCode: res.statusCode });
+    res.status(400).render('add-request', { employee, errorMessage, statusCode: res.statusCode });
   }
 });
 
@@ -105,7 +104,7 @@ requestRouter.post('/delete-request/:id', async(req, res) => {
   }
 });
 
-requestRouter.get('/update-request/:id', (req, res) => {
+requestRouter.get('/update-request/:id', isAuth, (req, res) => {
   const id = req.params.id;
   res.status(200).render('update-request', { id });
 })

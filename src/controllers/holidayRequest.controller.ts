@@ -73,7 +73,8 @@ async function getArrayPendingRequestsByEmployeeId(employeeId: number) {
   try {
     const requests = await holidayRequest.findAll({
       where: {
-        employeeId: employeeId
+        employeeId: employeeId,
+        status: 'pending'
       }
     });
     return requests;
@@ -111,6 +112,21 @@ export async function updateRequest(id: string, startDate: Date, endDate: Date):
   }
 }
 
+async function getArrayRequestsByEmployeeId(employeeId: number) {
+  try {
+    const requests = await holidayRequest.findAll({
+      where: {
+        employeeId: employeeId
+      }
+    });
+    return requests;
+  } catch (error) {
+    console.error('Error retrieving employee requests:', error);
+    throw error;
+  }
+}
+
+
 export const holidayRequestController = {
-  getAll, add, updateStatus, deleteRequest, getArrayPendingRequestsByEmployeeId, updateRequest
+  getAll, add, updateStatus, deleteRequest, getArrayPendingRequestsByEmployeeId, updateRequest, getArrayRequestsByEmployeeId
 }

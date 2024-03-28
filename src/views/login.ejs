@@ -6,6 +6,12 @@
     <title>Login</title>
 </head>
 <body>
+  <% if(statusCode !== 200){ %>
+    <script>
+        const errorMessage = "<%= error %>";
+        alert(errorMessage);
+    </script>
+    <% } %>
     <h1>Login</h1>
   <form action="/login" method="post">
     <label for="username">Username:</label>

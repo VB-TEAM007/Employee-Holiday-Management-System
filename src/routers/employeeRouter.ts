@@ -1,11 +1,12 @@
 import express from 'express';
 import EmployeeService from '../services/employeeService.js';
 import { employeeController } from '../controllers/employee.controller.js';
+import { isAuth } from '../utils/authUtils.js';
 
 const employeeRouter = express.Router();
 const employeeService = new EmployeeService;
 
-employeeRouter.get('/add-employee', (req, res)  => {
+employeeRouter.get('/add-employee', isAuth, (req, res)  => {
   res.status(200).render('add-employee');
 });
 

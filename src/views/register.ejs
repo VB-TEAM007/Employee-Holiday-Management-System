@@ -6,6 +6,12 @@
     <title>Document</title>
 </head>
 <body>
+    <% if(statusCode !== 200){ %>
+        <script>
+            const errorMessage = "<%= msg %>";
+            alert(errorMessage);
+        </script>
+        <% } %>
     <h1>Register</h1>
     <form action="/register" method="post">
         <label for="username">Username:</label>
@@ -14,6 +20,8 @@
         <input type="password" id="password" name="password" required><br>
         <label for="repeatPassword">Repeat password</label>
         <input type="password" id="repeatPassword" name="repeatPassword" required><br>
+        <label for="isAdmin"></label>
+        <input type="checkbox" name="isAdmin" id="isAdmin">
         <button type="submit">Register</button>
     </form><br>
     <a href="/login">Or login</a><br>

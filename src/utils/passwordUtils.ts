@@ -24,8 +24,8 @@ export function genPassword(password: string) {
 export async function issueJWT(user: any) {
 
     const _id = process.env.SELECTED_DATABASE === 'postgres'
-    ? user._id
-    : user.id;
+    ? user.id
+    : user._id;
 
   const expiresIn = '1d';
 
